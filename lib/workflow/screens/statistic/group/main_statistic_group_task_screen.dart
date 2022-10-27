@@ -1,0 +1,59 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:workflow_manager/workflow/screens/statistic/group/chart_statistic_group_task_screen.dart';
+
+import 'list_statistic_group_task_screen.dart';
+
+class MainStatisticGroupTaskScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _MainStatisticGroupTaskScreen();
+  }
+}
+
+class _MainStatisticGroupTaskScreen
+    extends State<MainStatisticGroupTaskScreen> {
+  final List<Tab> topTabs = <Tab>[
+    Tab(text: 'Biểu đồ'.toUpperCase()),
+    Tab(text: 'Danh sách'.toUpperCase()),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      body: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: new PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: new Container(
+              color: Colors.white,
+              child: new SafeArea(
+                child: Column(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Container(),
+                    ),
+                    new TabBar(
+                      isScrollable: false,
+                      labelColor: Colors.blue,
+                      unselectedLabelColor: Colors.grey,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 10),
+                      tabs: this.topTabs,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          body: new TabBarView(children: <Widget>[
+            ChartStatisticGroupTaskScreen(),
+            ListStatisticGroupTaskScreen(),
+          ]),
+        ),
+      ),
+    );
+  }
+}

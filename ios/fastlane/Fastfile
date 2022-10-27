@@ -1,0 +1,106 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+# produce is used to create an App Id in the developer member cender and/or iTunes Connect.
+# cert is used to create certificates.
+# sigh is used to manage provisioning profiles
+# gym is used to build and archive your app.
+# pilot is used to upload an ipa to testflight. Pilot is an alias for the upload_to_testflight action
+# deliver is used to manage the metadata on iTunes Connect.
+# pem is used to manage your push notification profiles
+
+fastlane_version "2.84.0"
+# xcversion(version: "11.7")
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  #============================> create project <=============================
+  lane :create do
+    # create a project on apple develop
+    produce(
+      username: 'app.cpnbocau@gmail.com',
+      app_identifier: 'com.nguyen.iOSDevopsDemo',
+      app_name: 'iOSDevopsDemo_Nguyen',
+      language: 'English',
+      app_version: '1.0',
+      sku: 'iOSDevopsDemo'
+    )
+    # create file provision develop
+    match(
+      git_url: 'git@gitlab.com:nguyenkhiem1205/iosdevopsdemo.git',
+      storage_mode: 'git',
+      type: 'development',
+      username: 'app.cpnbocau@gmail.com',
+      app_identifier: ['com.nguyen.iOSDevopsDemo']
+    )
+    # create file provision production
+    match(
+      git_url: 'git@gitlab.com:nguyenkhiem1205/iosdevopsdemo.git',
+      storage_mode: 'git',
+      type: 'appstore',
+      app_identifier: ['com.nguyen.iOSDevopsDemo']
+    )
+  end
+
+  #============================> run develop test <=============================
+  lane :develop do
+    # archive + export app to file ipa
+    gym(
+      scheme: 'Runner',
+      workspace: 'Runner.xcworkspace',
+      export_method: "ad-hoc", #adhoc or enterprise
+      include_bitcode: false,
+      include_symbols: false,
+      clean: true,
+      output_name: 'workflowManager.ipa'
+    )
+
+    # upload file ipa to appcenter
+    appcenter_upload(
+      api_token: "181e09759cfcfcf9de13a21f4297949bdace0de4",
+      owner_name: "dev-fsivietnam.com.vn",
+      owner_type: "user", # Default is user - set to organization for appcenter organizations
+      app_name: "l-ione",
+      notify_testers: true # Set to false if you don't want to notify testers of your new release (default: `false`)
+    )
+  end
+
+  #============================> run release <=============================
+  lane :release do
+    # archive + export app to file ipa
+    gym(
+      scheme: 'iOSDevopsDemo',
+      workspace: 'iOSDevopsDemo.xcworkspace',
+      export_method: 'app-store',
+      include_bitcode: true,
+      include_symbols: true,
+      clean: true,
+      output_name: 'iOSDevopsDemo.ipa',
+      output_directory: './build'
+    )
+
+    # upload file ipa to testflight
+    pilot(
+      username: 'app.cpnbocau@gmail.com',
+      team_id: 'BCA5H2FSGF',
+      app_identifier: 'com.nguyen.iOSDevopsDemo',
+      app_platform: 'ios',
+      ipa: "./build/iOSDevopsDemo.ipa",
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+end

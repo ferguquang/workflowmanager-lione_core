@@ -1,0 +1,61 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  LC_ALL: "en_US.UTF-8"
+  LANG: "en_US.UTF-8"
+
+.android_docker_image:
+  image: cirrusci/flutter
+  tags:
+    - l-ione-docker-fsi
+
+.setup_fastlane_android:
+  before_script:
+    - cd android
+    - gem install bundler
+    - bundler install
+
+flutter_test_android: # name of the lane
+  extends: .android_docker_image
+  stage: test
+  before_script:
+#    - flutter channel beta
+#    - flutter upgrade
+    - flutter packages get
+    - flutter clean
+  script:
+    - flutter test
+  tags:
+    - l-ione-docker-fsi
+  only:
+    - master
+
+flutter_build_android:
+  image: cirrusci/flutter
+  extends: .setup_fastlane_android
+  stage: build
+  script:
+    - bundle exec fastlane build
+  artifacts:
+    paths:
+      - build/app/outputs/apk/release/app-release.apk
+  tags:
+    - l-ione-docker-fsi
+  only:
+    - master
+
+flutter_deloy_android:
+  image: cirrusci/flutter
+  extends: .setup_fastlane_android
+  stage: deploy
+  dependencies:
+    - flutter_build_android
+  script:
+    - bundle exec fastlane deploy
+  tags:
+    - l-ione-docker-fsi
+  only:
+    - master

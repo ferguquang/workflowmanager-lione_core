@@ -1,0 +1,3 @@
+class EventAddComment {
+  EventAddComment();
+}

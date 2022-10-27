@@ -1,0 +1,41 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Build a Flutter apk"
+  lane :build do
+    Dir.chdir("../..") do
+      sh "flutter packages get"
+      sh "flutter clean"
+      sh "flutter build apk"
+    end
+  end
+
+  desc "Submit a new Beta Build to AppCenter"
+  lane :deploy do
+    if File.exist?(File.dirname(__FILE__) + "./../build/app/outputs/apk/release/app-release.apk")
+      appcenter_upload(
+        api_token: "9a8d378ba2588e84c5d777c47d19609ec559bcf4", # Your secret api token from app center
+        owner_name: "dev-fsivietnam.com.vn", # Your username on AppCenter
+        app_name: "l-ione-android", # Your AppCenter name
+        apk: "../build/app/outputs/apk/release/app-release.apk",
+      )
+    else
+      UI.message('Unable to find apk')
+    end
+  end
+end

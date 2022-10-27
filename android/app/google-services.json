@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "478082525076",
+    "project_id": "tpc-cantho",
+    "storage_bucket": "tpc-cantho.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478082525076:android:96773e6982c28b063fd181",
+        "android_client_info": {
+          "package_name": "vn.cetech.evngenco2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478082525076-tepbk9c10hu372nptc6tiqsm2k3taqr7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdtuA1RSjCI9FWER-e-7X7Qrcp4xhdDXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478082525076-tepbk9c10hu372nptc6tiqsm2k3taqr7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "478082525076-frigomblloese62sfkjbbhjj23v0nccp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "vn.cetech.tpccantho"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

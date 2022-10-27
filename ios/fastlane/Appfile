@@ -1,0 +1,6 @@
+# app_identifier("com.fsi.workflowManager") # The bundle identifier of your app
+# apple_id("dev@fsivietnam.com.vn") # Your Apple email address
+
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

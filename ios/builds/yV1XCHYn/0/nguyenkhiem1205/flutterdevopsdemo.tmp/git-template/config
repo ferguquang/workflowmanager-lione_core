@@ -1,0 +1,4 @@
+[fetch]
+	recurseSubmodules = false
+[http "https://gitlab.com"]
+	sslCAInfo = /Users/Shared/Develop/Resource/Flutter/WorkflowManager/ios/builds/yV1XCHYn/0/nguyenkhiem1205/flutterdevopsdemo.tmp/CI_SERVER_TLS_CA_FILE

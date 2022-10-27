@@ -1,0 +1,4 @@
+class EventReloadListRegister {
+
+  EventReloadListRegister();
+}
