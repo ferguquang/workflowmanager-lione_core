@@ -38,6 +38,7 @@ class ServiceFormStepSignConfig {
   bool enableNamedParams;
   int commandTimeout;
   int oneTimeCommandTimeout;
+  // todo isSigned
 
   ServiceFormStepSignConfig(
       {this.iD,

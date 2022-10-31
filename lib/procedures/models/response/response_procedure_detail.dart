@@ -504,6 +504,7 @@ class CurrentStep {
   DateLine dateLine;
   FieldTableList fieldTableList;
   bool isCheckReLoadModel = false;
+  bool isAutoSave = false;
 
   bool isDataEmpty() {
     return name == null &&
@@ -523,6 +524,7 @@ class CurrentStep {
   CurrentStep.fromJson(Map<String, dynamic> json) {
     name = json['Name'];
     endDate = json['EndDate'];
+    isAutoSave = json['IsAutoSave'];
     executors = json['Executors'] != null
         ? new UserInfo.fromJson(json['Executors'])
         : null;

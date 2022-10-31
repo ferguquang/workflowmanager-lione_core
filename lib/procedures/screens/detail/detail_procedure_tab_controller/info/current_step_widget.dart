@@ -50,6 +50,15 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
   @override
   void initState() {
     super.initState();
+    // if (model.isAutoSave) {
+    //   donePress();
+    // }
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (model.isAutoSave) {
+        donePress();
+      }
+    });
   }
 
   bool _isReadonly() {
@@ -158,6 +167,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
                   ),
                 ),
               ),
+
               Visibility(
                   visible: isNotNullOrEmpty(model?.singleFields) ||
                       isNotNullOrEmpty(model?.tableFields),
@@ -287,7 +297,8 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
     DataRecordSaveDataResponse dataRecordSaveDataResponse =
         DataRecordSaveDataResponse.fromJson(response);
     if (dataRecordSaveDataResponse.status == 1) {
-      DataRecordSaveData dataRecordSaveData = dataRecordSaveDataResponse.data;
+
+      // DataRecordSaveData dataRecordSaveData = dataRecordSaveDataResponse.data;
       showSuccessToast("Lưu thông tin thành công.");
     } else {
       showErrorToast(dataRecordSaveDataResponse,

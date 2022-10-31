@@ -14,6 +14,7 @@ import 'package:workflow_manager/procedures/screens/register/info_work_follow/ra
 import 'package:workflow_manager/workflow/screens/details/flow_chart.dart';
 import 'package:workflow_manager/procedures/models/response/star.dart'
 as passedStar;
+import 'action_layout.dart';
 import 'require_action/require_action_bottom_sheet.dart';
 
 class HeaderDetailProcedureScreen extends StatelessWidget {
@@ -35,8 +36,15 @@ class HeaderDetailProcedureScreen extends StatelessWidget {
             Row(
               children: [
                 dataProcedureDetail?.actions?.conditions != null
-                    ? _actionLayout(
-                    dataProcedureDetail.actions?.conditions, context)
+                    ?
+                ActionLayout(
+                  conditions: dataProcedureDetail.actions?.conditions,
+                  dataProcedureDetail: dataProcedureDetail,
+                  isReject: isReject,
+                )
+                // _actionLayout(
+                //     dataProcedureDetail.actions?.conditions, context
+                // )
                     : SizedBox(),
                 dataProcedureDetail?.rateAction != null
                     ? _rateAction(dataProcedureDetail?.rateAction, context)
