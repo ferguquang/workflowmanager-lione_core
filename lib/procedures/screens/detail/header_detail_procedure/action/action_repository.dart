@@ -5,6 +5,8 @@ import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/procedures/models/params/detail_procedure_request.dart';
 import 'package:workflow_manager/procedures/models/response/action_procedure_response.dart';
+import 'package:workflow_manager/procedures/models/response/data_register_save_response.dart';
+import 'package:workflow_manager/procedures/models/response/data_signature_list_response.dart';
 import 'package:workflow_manager/procedures/models/response/done_info_response.dart';
 import 'package:workflow_manager/procedures/models/response/file_template.dart';
 import 'package:workflow_manager/procedures/models/response/response_procedure_detail.dart';
@@ -278,17 +280,63 @@ class ActionRepository with ChangeNotifier {
     }
   }
 
-  Future<int> registerResentInfo(
-      int idNextStep, int idServiceRecord, String describe) async {
+  Future<int> registerResentInfo(BuildContext context, int idNextStep, int idServiceRecord, String describe) async {
     Map<String, dynamic> params = Map();
     params["IDNextStep"] = idNextStep;
     params["IDServiceRecord"] = idServiceRecord;
     params["Describe"] = describe;
     var json = await ApiCaller.instance
         .postFormData(AppUrl.registerResentInfo, params);
-    ResponseMessage responseMessage = ResponseMessage.fromJson(json);
-    ToastMessage.show(responseMessage.messages,
-        responseMessage.status == 1 ? ToastStyle.success : ToastStyle.error);
-    return responseMessage.status;
+    DataRegisterSaveResponse response = DataRegisterSaveResponse.fromJson(json);
+    if (response.data.isSigned) {
+      params["IDServiceRecordTemplateExport"] =
+          response.data.iDServiceRecordTemplateExport;
+      params["PdfPath"] = response.data.serviceInfoFile.path;
+      // params["FieldIndexCreate"] = listIntString;
+      FileTemplate signalFile = FileTemplate(
+          name: response.data?.serviceInfoFile?.name,
+          path: "/Storage/Files/" + response.data?.serviceInfoFile?.path,
+          signPath:
+          "/Storage/Files/" + response.data?.serviceInfoFile?.path,
+          extension: response.data?.serviceInfoFile?.extension);
+      SignatureLocation signatureLocation;
+      if (response?.data?.serviceFormStepSignConfig != null &&
+          response?.data?.serviceFormStepSignConfig?.iD > 0) {
+        signatureLocation = SignatureLocation();
+        signatureLocation.page =
+            response.data.serviceFormStepSignConfig.page;
+        signatureLocation.height =
+            response.data.serviceFormStepSignConfig.height;
+        signatureLocation.width =
+            response.data.serviceFormStepSignConfig.width;
+        signatureLocation.pageHeight =
+            response.data.serviceFormStepSignConfig.pageHeight;
+        signatureLocation.pageWidth =
+            response.data.serviceFormStepSignConfig.pageWidth;
+        signatureLocation.signPage =
+            response.data.serviceFormStepSignConfig.signPage;
+        signatureLocation.totalPage =
+            response.data.serviceFormStepSignConfig.totalPage;
+        signatureLocation.x = response.data.serviceFormStepSignConfig.x;
+        signatureLocation.y = response.data.serviceFormStepSignConfig.y;
+      }
+      DataRegisterSaveResponse responseSignal = await pushPage(
+          context,
+          SignalScreen(
+            signalFile,
+            response.data?.serviceRecord?.iD,
+            "Ký ngay khi ký",
+            signatureLocation: signatureLocation,
+            signatures: response.data.userSignatures,
+            action: response.data.action,
+            // paramsRegitster: params,
+            iDGroupPdfForm: response.data.iDGroup.toString(),
+          ));
+    }
+
+    // ResponseMessage responseMessage = ResponseMessage.fromJson(json);
+    // ToastMessage.show(responseMessage.messages,
+    //     responseMessage.status == 1 ? ToastStyle.success : ToastStyle.error);
+    return response.status;
   }
 }

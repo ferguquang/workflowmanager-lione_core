@@ -29,13 +29,16 @@ class _ActionLayoutState extends State<ActionLayout> {
     super.initState();
 
     eventBus.on<EventShowAction>().listen((event) {
+      Conditions condition = conditions.firstWhere((element) {
+        return element.schemaConditionType == 0;
+      });
       showModalBottomSheet(
           isScrollControlled: true,
           context: context,
           builder: (_) {
-            conditions[index].titleHoSo = dataProcedureDetail.title;
+            condition.titleHoSo = dataProcedureDetail.title;
             return ActionBottomSheet(
-              conditions: conditions[index],
+              conditions: condition,
               idServiceRecord:
               dataProcedureDetail.iDServiceRecord,
               isReject: isReject,

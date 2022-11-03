@@ -8,6 +8,7 @@ import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/app_constant.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
+import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/response/FCFilemodel.dart';
 import 'package:workflow_manager/procedures/models/response/data_record_save_data_response.dart';
 import 'package:workflow_manager/procedures/models/response/field_table_list.dart';
@@ -18,6 +19,7 @@ import 'package:workflow_manager/procedures/models/response/response_procedure_d
 import 'package:workflow_manager/procedures/models/response/single_field.dart';
 import 'package:workflow_manager/procedures/models/response/user.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_screen.dart';
+import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/event_show_action.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/single_field_widget/single_field_widget.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/table_field_widget/group_table_field_widget.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/table_field_widget/table_field_widget.dart';
@@ -297,7 +299,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
     DataRecordSaveDataResponse dataRecordSaveDataResponse =
         DataRecordSaveDataResponse.fromJson(response);
     if (dataRecordSaveDataResponse.status == 1) {
-
+      eventBus.fire(EventShowAction());
       // DataRecordSaveData dataRecordSaveData = dataRecordSaveDataResponse.data;
       showSuccessToast("Lưu thông tin thành công.");
     } else {

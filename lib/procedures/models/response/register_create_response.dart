@@ -43,6 +43,8 @@ class RegisterCreateModel {
   String recordName;
   int priority;
   bool isEnableAttachSignFile;
+  bool isSignAttachFile;
+  bool isSignAttachFileRequired;
   bool isParallelAssign = false;
   String describe;
   String code;
@@ -96,6 +98,8 @@ class RegisterCreateModel {
     recordName = json['RecordName'];
     priority = json['Priority'];
     isEnableAttachSignFile = json['IsEnableAttachSignFile'];
+    isSignAttachFile = json['IsSignAttachFile'];
+    isSignAttachFileRequired = json['IsSignAttachFileRequired'];
     describe = json['Describe'];
     code = json['Code'];
     iDType = json['IDType'];

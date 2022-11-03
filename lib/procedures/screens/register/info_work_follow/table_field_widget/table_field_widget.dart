@@ -294,7 +294,8 @@ class _TableFieldWidgetState extends State<TableFieldWidget>
   void initState() {
     super.initState();
     widget.listTableItem = widget.listTableItem;
-    title = "Bảng dữ liệu ${widget.indexTitle ?? ''}";
+    title = widget.tableName;
+    // title = "Bảng dữ liệu ${widget.indexTitle ?? ''}";
   }
 
   @override

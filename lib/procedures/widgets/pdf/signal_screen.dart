@@ -41,12 +41,14 @@ class SignalScreen extends StatefulWidget {
   bool isTypeRegister;
   SignatureLocation signatureLocation;
   String iDGroupPdfForm;
+  String action; // endpoint API
 
   SignalScreen(this.signalFile, this.idHoso, this.title,
       {this.signatures,
       this.signatureLocation,
       this.paramsRegitster,
       this.iDGroupPdfForm,
+      this.action,
       this.isTypeRegister = true})
       : super(key: GlobalKey());
 
@@ -579,7 +581,19 @@ class SignalScreenState extends State<SignalScreen> {
     params["Password"] = password.toString();
     params["SignPageFixPos"] = signPageFixPos.toList().toString();
     params["IDGroupPdfForm"] = widget.iDGroupPdfForm;
-    if (widget.signatures != null) {
+    if (isNotNullOrEmpty(widget.action)) {
+      var json = await ApiCaller.instance
+          .postFormData(widget.action, params);
+      BaseResponse response = BaseResponse.fromJson(json);
+      if (response.status == 1) {
+        ToastMessage.show(response.messages, ToastStyle.success);
+        Navigator.pop(context);
+        eventBus.fire(EventReloadDetailProcedure());
+        return true;
+      }
+      showErrorToast(response, defaultMessage: "Lưu chữ ký thất bại");
+      return false;
+    } else if (widget.signatures != null) {
       if (signalWidgets.length > 0)
         params["Path"] = signalWidgets[0]
             .signatures

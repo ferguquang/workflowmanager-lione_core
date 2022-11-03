@@ -591,12 +591,57 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       params["IDService"] = _infoWorkFollowRepository.registerCreateModel.iD;
       var json = await ApiCaller.instance
           .postFormData(AppUrl.getQTTTRegisterChange, params);
-      DataRegisterSaveResponse response =
-          DataRegisterSaveResponse.fromJson(json);
+      DataRegisterSaveResponse response = DataRegisterSaveResponse.fromJson(json);
       if (response.status == 1) {
-        showSuccessToast(response.messages);
-        Navigator.pop(context, response);
-        Navigator.pop(context);
+        if (response.data.isSigned) {
+          params["IDServiceRecordTemplateExport"] =
+              response.data.iDServiceRecordTemplateExport;
+          params["PdfPath"] = response.data.serviceInfoFile.path;
+          params["FieldIndexCreate"] = listIntString;
+          FileTemplate signalFile = FileTemplate(
+              name: response.data?.serviceInfoFile?.name,
+              path: "/Storage/Files/" + response.data?.serviceInfoFile?.path,
+              signPath:
+              "/Storage/Files/" + response.data?.serviceInfoFile?.path,
+              extension: response.data?.serviceInfoFile?.extension);
+          SignatureLocation signatureLocation;
+          if (response?.data?.serviceFormStepSignConfig != null &&
+              response?.data?.serviceFormStepSignConfig?.iD > 0) {
+            signatureLocation = SignatureLocation();
+            signatureLocation.page =
+                response.data.serviceFormStepSignConfig.page;
+            signatureLocation.height =
+                response.data.serviceFormStepSignConfig.height;
+            signatureLocation.width =
+                response.data.serviceFormStepSignConfig.width;
+            signatureLocation.pageHeight =
+                response.data.serviceFormStepSignConfig.pageHeight;
+            signatureLocation.pageWidth =
+                response.data.serviceFormStepSignConfig.pageWidth;
+            signatureLocation.signPage =
+                response.data.serviceFormStepSignConfig.signPage;
+            signatureLocation.totalPage =
+                response.data.serviceFormStepSignConfig.totalPage;
+            signatureLocation.x = response.data.serviceFormStepSignConfig.x;
+            signatureLocation.y = response.data.serviceFormStepSignConfig.y;
+          }
+          DataRegisterSaveResponse responseSignal = await pushPage(
+              context,
+              SignalScreen(
+                signalFile,
+                response.data?.serviceRecord?.iD,
+                "Ký ngay khi ký",
+                signatureLocation: signatureLocation,
+                signatures: response.data.userSignatures,
+                paramsRegitster: params,
+                action: response.data.action,
+                iDGroupPdfForm: response.data.iDGroup.toString(),
+              ));
+        } else {
+          showSuccessToast(response.messages);
+          Navigator.pop(context, response);
+          Navigator.pop(context);
+        }
       } else {
         showErrorToast(response.messages);
       }

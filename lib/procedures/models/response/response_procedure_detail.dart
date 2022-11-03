@@ -439,6 +439,7 @@ class Conditions {
 
   String idStepNext;
   String titleHoSo;
+  int schemaConditionType;
 
   Conditions(
       {this.action,
@@ -448,6 +449,7 @@ class Conditions {
       this.nextSchemaConditionId,
       this.color,
       this.name,
+      this.schemaConditionType,
       this.describe});
 
   Conditions.fromJson(Map<String, dynamic> json) {
@@ -458,6 +460,7 @@ class Conditions {
     nextSchemaConditionId = json['NextSchemaConditionId'];
     color = json['Color'];
     name = json['Name'];
+    schemaConditionType = json['SchemaConditionType'];
   }
 
   Map<String, dynamic> toJson() {

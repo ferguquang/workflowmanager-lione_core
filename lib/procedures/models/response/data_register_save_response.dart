@@ -130,10 +130,11 @@ class Data {
   int iDServiceRecordTemplateExport;
   var iDGroup;
   String isDoneInfoDATA;
+  String action;
 
   Data({
     this.serviceRecord,
-    this.isSigned,
+    this.isSigned = false,
     this.serviceInfoFile,
     this.userSignatures,
     this.serviceFormStepSignConfig,
@@ -146,7 +147,7 @@ class Data {
     serviceRecord = json['ServiceRecord'] != null
         ? new ServiceRecords.fromJson(json['ServiceRecord'])
         : null;
-    isSigned = json['IsSigned'];
+    isSigned = json['IsSigned'] ?? false;
     serviceInfoFile = json['ServiceInfoFile'] != null
         ? new ServiceInfoFile.fromJson(json['ServiceInfoFile'])
         : null;
@@ -163,5 +164,6 @@ class Data {
     iDServiceRecordTemplateExport = json['IDServiceRecordTemplateExport'];
     iDGroup = json['IDGroup'];
     isDoneInfoDATA = json['IsDoneInfoDATA'];
+    action = json['Action'];
   }
 }
