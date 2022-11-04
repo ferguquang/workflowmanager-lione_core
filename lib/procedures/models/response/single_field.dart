@@ -1,6 +1,7 @@
 import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/single_field_widget/single_field_widget.dart';
 
+import 'api_source.dart';
 import 'props.dart';
 import 'drop_down_datum.dart';
 import 'group_infos.dart';
@@ -46,6 +47,7 @@ class Field {
   String textCheckValidate = "";
   String colorClass;
   List<int> idRows;
+  ApiSource apiSource;
 
   Field(
       {this.iD,
@@ -130,6 +132,7 @@ class Field {
       });
     }
     if (json["Props"] != null) props = Props.fromJson(json["Props"]);
+    if (json["ApiSource"] != null) apiSource = ApiSource.fromJson(json["ApiSource"]);
     if (json['DropdownData'] != null) {
       dropdownData = new List<DropdownDatum>();
       json['DropdownData'].forEach((v) {
@@ -208,6 +211,7 @@ class Field {
     target.isMoney = this.isMoney;
     target.isMultiple = this.isMultiple;
     target.props = this.props;
+    target.apiSource = this.apiSource;
     target.displayText = this.displayText;
     target.type = this.type;
     target.isRequired = this.isRequired;

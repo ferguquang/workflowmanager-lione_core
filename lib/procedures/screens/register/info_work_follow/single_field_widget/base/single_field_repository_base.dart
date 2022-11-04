@@ -178,8 +178,7 @@ class SingleFieldRepositoryBase extends ChangeNotifier {
       String origin = updateSelectItem.origin;
       if (code == origin) // check code của cột bị ảnh hưởng
       {
-        List<Attribute> attributes =
-            dropdownDatumList[positionDropDownSelected].attributes;
+        List<Attribute> attributes = dropdownDatumList[positionDropDownSelected].attributes;
         for (int c = 0; c < attributes.length; c++) {
           String keyAttributes = attributes[c].key.toLowerCase();
           if (target == keyAttributes) {

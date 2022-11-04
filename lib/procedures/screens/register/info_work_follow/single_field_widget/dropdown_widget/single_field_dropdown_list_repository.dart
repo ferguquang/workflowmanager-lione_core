@@ -5,8 +5,10 @@ import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/choice_dialog/choice_dialog.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
+import 'package:workflow_manager/procedures/models/response/api_source.dart';
 import 'package:workflow_manager/procedures/models/response/column_logic.dart';
 import 'package:workflow_manager/procedures/models/response/content_map_response.dart';
+import 'package:workflow_manager/procedures/models/response/data_list_dynamiclly.dart';
 import 'package:workflow_manager/procedures/models/response/drop_down_datum.dart';
 import 'package:workflow_manager/procedures/models/response/gen_table_row.dart';
 import 'package:workflow_manager/procedures/models/response/logic_column_update.dart';
@@ -120,18 +122,54 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
     });
   }
   @override
-  onTab() {
+  onTab() async {
     if (isReadonly) return;
     FocusScope.of(context).unfocus();
     List<String> selectedIds = (model.value ?? "").split(separator);
-    List<DropdownDatum> selectedObjects = model.dropdownData
-        .where((element) => selectedIds.contains(element.value))
-        .toList();
-    List<DropdownDatum> dropdownList = model.dropdownData;
-    if (isNullOrEmpty(model.dropdownData)) {
-      showErrorToast("Danh sách trống.");
-      return;
+    List<DropdownDatum> dropdownList = [];
+    List<DropdownDatum> selectedObjects = [];
+
+    if (model.apiSource != null && model.value != null) {
+      ApiSource apiSource = model.apiSource;
+      if (apiSource.apiParams.isNotEmpty) {
+        Map<String, dynamic> params = {};
+        for (int i = 0; i < apiSource.apiParams.length; i++) {
+          ApiParams apiParams = apiSource.apiParams[i];
+          // apiParams.
+          String code = apiParams.code;
+          String paramsName = apiParams.paramName;
+          if (isNotNullOrEmpty(code)) {
+            Field codeField = fields.firstWhere((element) => element.code == code);
+            params[code] = codeField.value;
+            print("");
+          }
+        }
+        params["IsConvertDropdownData"] = 1;
+        var json = await ApiCaller.instance.postFormData(apiSource.apiLink, params);
+        DataListApiSourceResponse dataListApiSourceResponse = DataListApiSourceResponse.fromJson(json);
+        dropdownList = dataListApiSourceResponse.data.categories;
+        print("DataListApiSourceResponse: ${dropdownList.length}");
+        model.dropdownData = dropdownList;
+        selectedObjects = dropdownList.where((element) {
+          return selectedIds.contains(element.value);
+        }).toList();
+
+        if (isNullOrEmpty(dropdownList)) {
+          showErrorToast("Danh sách trống.");
+          return;
+        }
+      }
+    } else {
+      selectedObjects = model.dropdownData
+          .where((element) => selectedIds.contains(element.value))
+          .toList();
+       dropdownList = model.dropdownData;
+      if (isNullOrEmpty(model.dropdownData)) {
+        showErrorToast("Danh sách trống.");
+        return;
+      }
     }
+
 
     ChoiceDialog choiceDialog = ChoiceDialog<DropdownDatum>(
         context, dropdownList,
@@ -312,8 +350,7 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
               int selectedPosition = model.dropdownData.indexOf(selected[0]);
               // khi click vào thì update item khác: updateValueRanges và updateSelectedValues xử lý logic giống nhau (sever đã confirm)
               if (updateValueRanges != null && updateValueRanges.length > 0) {
-                handleUpdateValue(i, updateValueRanges, fieldItem,
-                    model.dropdownData, selectedPosition);
+                handleUpdateValue(i, updateValueRanges, fieldItem, model.dropdownData, selectedPosition);
               }
 
               if (updateSelectedValues != null &&

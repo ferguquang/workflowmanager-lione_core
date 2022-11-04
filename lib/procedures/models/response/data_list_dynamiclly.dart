@@ -4,6 +4,34 @@ import 'dart:core';
 import 'category.dart';
 import 'package:workflow_manager/base/models/base_response.dart';
 
+import 'drop_down_datum.dart';
+
+class DataListApiSourceResponse extends BaseResponse {
+  int status;
+  DataListApiSource data;
+
+  DataListApiSourceResponse.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
+    status = json["Status"];
+    data = json['Data'] != null
+        ? new DataListApiSource.fromJson(json['Data'])
+        : null;
+  }
+}
+
+class DataListApiSource {
+  List<DropdownDatum> categories;
+
+  DataListApiSource.fromJson(Map<String, dynamic> json) {
+    if (json['Categories'] != null) {
+      categories = new List<DropdownDatum>();
+      json['Categories'].forEach((v) {
+        categories.add(new DropdownDatum.fromJson(v));
+      });
+    }
+  }
+}
+
+
 class DataListDynamicllyResponse extends BaseResponse {
   int status;
   DataListDynamiclly data;
