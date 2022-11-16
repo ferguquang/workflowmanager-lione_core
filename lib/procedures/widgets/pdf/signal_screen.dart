@@ -634,11 +634,11 @@ class SignalScreenState extends State<SignalScreen> {
       DataSignedPdfResponse response = DataSignedPdfResponse.fromJson(json);
       if (response.status == 1) {
         showSuccessToast("Ký file thành công!");
-        var json = await ApiCaller.instance
-            .postFormData(AppUrl.getQTTTSignatureSavePDF, params);
+        // var json = await ApiCaller.instance
+        //     .postFormData(AppUrl.getQTTTSignatureSavePDF, params);
         DataSignedPdfResponse response = DataSignedPdfResponse.fromJson(json);
         if (response.status == 1) {
-          showSuccessToast("Ký file thành công!");
+          // showSuccessToast("Ký file thành công!");
           if (isNotNullOrEmpty(response?.data?.signFile?.actions)) {
             await showModalBottomSheet(
               isScrollControlled: true,
