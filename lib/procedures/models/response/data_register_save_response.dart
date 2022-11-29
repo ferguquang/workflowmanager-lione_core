@@ -121,6 +121,7 @@ class ServiceFormStepSignConfig {
 }
 
 class Data {
+  int id; // idServiceRecord
   ServiceRecords serviceRecord;
   bool isSigned;
   ServiceInfoFile serviceInfoFile;
@@ -133,6 +134,7 @@ class Data {
   String action;
 
   Data({
+    this.id,
     this.serviceRecord,
     this.isSigned = false,
     this.serviceInfoFile,
@@ -148,6 +150,7 @@ class Data {
         ? new ServiceRecords.fromJson(json['ServiceRecord'])
         : null;
     isSigned = json['IsSigned'] ?? false;
+    id = json['ID'];
     serviceInfoFile = json['ServiceInfoFile'] != null
         ? new ServiceInfoFile.fromJson(json['ServiceInfoFile'])
         : null;

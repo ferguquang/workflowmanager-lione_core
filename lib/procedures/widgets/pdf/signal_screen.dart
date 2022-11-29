@@ -42,6 +42,7 @@ class SignalScreen extends StatefulWidget {
   SignatureLocation signatureLocation;
   String iDGroupPdfForm;
   String action; // endpoint API
+  String isDoneInfoDATA;
 
   SignalScreen(this.signalFile, this.idHoso, this.title,
       {this.signatures,
@@ -49,6 +50,7 @@ class SignalScreen extends StatefulWidget {
       this.paramsRegitster,
       this.iDGroupPdfForm,
       this.action,
+      this.isDoneInfoDATA,
       this.isTypeRegister = true})
       : super(key: GlobalKey());
 
@@ -582,12 +584,20 @@ class SignalScreenState extends State<SignalScreen> {
     params["SignPageFixPos"] = signPageFixPos.toList().toString();
     params["IDGroupPdfForm"] = widget.iDGroupPdfForm;
     if (isNotNullOrEmpty(widget.action)) {
+      params["IDServiceRecord"] = widget.idHoso;
+      params["PdfPath"] = widget.paramsRegitster["PdfPath"];
+      params["IsDoneInfoDATA"] = widget.isDoneInfoDATA;
       var json = await ApiCaller.instance
           .postFormData(widget.action, params);
       BaseResponse response = BaseResponse.fromJson(json);
       if (response.status == 1) {
         ToastMessage.show(response.messages, ToastStyle.success);
-        Navigator.pop(context);
+        String password = await SharedPreferencesClass.get(
+            SharedPreferencesClass.PASSWORD_SIGNAL);
+        if (!isNullOrEmpty(password)) {
+          Navigator.pop(context);
+        }
+
         eventBus.fire(EventReloadDetailProcedure());
         return true;
       }

@@ -629,12 +629,13 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
               context,
               SignalScreen(
                 signalFile,
-                response.data?.serviceRecord?.iD,
+                response.data?.id,
                 "Ký ngay khi ký",
                 signatureLocation: signatureLocation,
                 signatures: response.data.userSignatures,
                 paramsRegitster: params,
                 action: response.data.action,
+                isDoneInfoDATA: response.data.isDoneInfoDATA,
                 iDGroupPdfForm: response.data.iDGroup.toString(),
               ));
         } else {

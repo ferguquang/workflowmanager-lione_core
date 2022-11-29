@@ -22,7 +22,8 @@ class AppUrl {
   // RELEASE:
   // static const String baseURL = "https://api-gateway.lione.vn/api/";
   // static const String baseURL = "https://apiqtnb.evngenco2.vn:8091/api/";
-  static const String baseURL = "http://118.70.48.211:1681/api/";
+  // static const String baseURL = "http://118.70.48.211:1681/api/";
+  static const String baseURL = "http://27.72.28.202:9110/api/";
   static const String oneSignalAppID = '93463f14-ade9-4705-aa0c-bf98b60d98c6';
 
   // ------------------------------ manager ----------------------------------//

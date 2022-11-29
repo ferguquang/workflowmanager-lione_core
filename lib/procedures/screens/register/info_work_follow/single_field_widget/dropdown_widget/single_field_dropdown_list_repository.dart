@@ -140,7 +140,7 @@ class SingleFieldDropdownRepository extends SingleFieldRepositoryBase {
           String paramsName = apiParams.paramName;
           if (isNotNullOrEmpty(code)) {
             Field codeField = fields.firstWhere((element) => element.code == code);
-            params[code] = codeField.value;
+            params[paramsName] = codeField.value;
             print("");
           }
         }
