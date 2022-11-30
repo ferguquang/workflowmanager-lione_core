@@ -1,0 +1,7 @@
+class EventAutoSave {
+
+}
+
+class EventDoneAutoSave {
+
+}

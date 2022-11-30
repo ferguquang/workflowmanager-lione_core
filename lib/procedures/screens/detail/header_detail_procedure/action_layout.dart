@@ -28,24 +28,24 @@ class _ActionLayoutState extends State<ActionLayout> {
   void initState() {
     super.initState();
 
-    eventBus.on<EventShowAction>().listen((event) {
-      Conditions condition = conditions.firstWhere((element) {
-        return element.schemaConditionType == 0;
-      });
-      showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          builder: (_) {
-            condition.titleHoSo = dataProcedureDetail.title;
-            return ActionBottomSheet(
-              conditions: condition,
-              idServiceRecord:
-              dataProcedureDetail.iDServiceRecord,
-              isReject: isReject,
-              isFinish: true,
-            );
-          });
-    });
+    // eventBus.on<EventShowAction>().listen((event) {
+    //   Conditions condition = conditions.firstWhere((element) {
+    //     return element.schemaConditionType == 0;
+    //   });
+    //   showModalBottomSheet(
+    //       isScrollControlled: true,
+    //       context: context,
+    //       builder: (_) {
+    //         condition.titleHoSo = dataProcedureDetail.title;
+    //         return ActionBottomSheet(
+    //           conditions: condition,
+    //           idServiceRecord:
+    //           dataProcedureDetail.iDServiceRecord,
+    //           isReject: isReject,
+    //           isFinish: true,
+    //         );
+    //       });
+    // });
   }
 
   @override

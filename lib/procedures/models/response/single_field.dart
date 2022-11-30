@@ -223,6 +223,11 @@ class Field {
     target.groupInfosList = this.groupInfosList;
     target.groupInfosList = this.groupInfosList;
 
+    target.minChar = this.minChar;
+    target.maxChar = this.maxChar;
+    target.minVal = this.minVal;
+    target.maxVal = this.maxVal;
+
     List<String> stringList = [];
     target.groupValues = stringList;
 

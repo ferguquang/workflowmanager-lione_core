@@ -3,6 +3,7 @@ import 'package:workflow_manager/base/network/api_caller.dart';
 import 'package:workflow_manager/base/network/app_url.dart';
 import 'package:workflow_manager/base/ui/toast_view.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
+import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/params/detail_procedure_request.dart';
 import 'package:workflow_manager/procedures/models/response/action_procedure_response.dart';
 import 'package:workflow_manager/procedures/models/response/data_register_save_response.dart';
@@ -15,10 +16,13 @@ import 'package:workflow_manager/procedures/screens/register/info_work_follow/as
 import 'package:workflow_manager/procedures/widgets/pdf/signal_screen.dart';
 import 'package:workflow_manager/workflow/models/response/message_response.dart';
 
+import '../eventAutoSave.dart';
+
 class ActionRepository with ChangeNotifier {
   DataIsDoneInfo _dataIsDoneInfo;
   List<SelectSteps> _selectSteps;
   SelectSteps selectStep;
+  bool isAutoSave;
 
   DataIsDoneRequireAddition _dataIsDoneRequireAddition;
   DataIsResentInfo _dataIsResentInfo;
@@ -36,7 +40,7 @@ class ActionRepository with ChangeNotifier {
   DataIsResentInfo get dataIsResentInfo => _dataIsResentInfo;
 
   Future<int> getIsResolve(
-      Conditions conditions, int idServiceRecord, bool isReject) async {
+      Conditions conditions, int idServiceRecord, bool isReject, {bool isOnEventBus = false}) async {
     if (conditions.type.toLowerCase() == "Resolve".toLowerCase()) {
       IsResolveRequest isResolveRequest = IsResolveRequest();
       isResolveRequest.idServiceRecord = idServiceRecord;
@@ -92,26 +96,34 @@ class ActionRepository with ChangeNotifier {
 
         return response.status;
       } else {
-        //data - thông tin xác nhận chuyển bước
-        IsDoneInfoRequest infoRequest = IsDoneInfoRequest();
-        infoRequest.id = idServiceRecord;
-        infoRequest.idStep = conditions.iDServiceRecordWfStep;
-        infoRequest.idSchemaCondition = conditions.iDSchemaCondition;
-
-        var response = await ApiCaller.instance.postFormData(
-            AppUrl.recordIsDoneInfo, infoRequest.getParams(),
-            isLoading: true);
-        IsDoneInfoResponse isDoneInfoResponse =
-            IsDoneInfoResponse.fromJson(response);
-        if (isDoneInfoResponse.status == 1) {
-          _dataIsDoneInfo = isDoneInfoResponse.data;
-          idStepNext = isDoneInfoResponse.data.iDServiceRecordWfStep;
-          notifyListeners();
-        } else {
-          ToastMessage.show(isDoneInfoResponse.messages, ToastStyle.error);
+        // chỗ này đổi logic
+        if (conditions.schemaConditionType == 0 && !isOnEventBus) {
+          eventBus.fire(EventDoneAutoSave());
         }
 
-        return isDoneInfoResponse.status;
+        //data - thông tin xác nhận chuyển bước
+        if (isOnEventBus) {
+          IsDoneInfoRequest infoRequest = IsDoneInfoRequest();
+          infoRequest.id = idServiceRecord;
+          infoRequest.idStep = conditions.iDServiceRecordWfStep;
+          infoRequest.idSchemaCondition = conditions.iDSchemaCondition;
+          var response = await ApiCaller.instance.postFormData(
+              AppUrl.recordIsDoneInfo, infoRequest.getParams(),
+              isLoading: true);
+          IsDoneInfoResponse isDoneInfoResponse =
+          IsDoneInfoResponse.fromJson(response);
+          if (isDoneInfoResponse.status == 1) {
+            _dataIsDoneInfo = isDoneInfoResponse.data;
+            idStepNext = isDoneInfoResponse.data.iDServiceRecordWfStep;
+            notifyListeners();
+          } else {
+            ToastMessage.show(isDoneInfoResponse.messages, ToastStyle.error);
+          }
+
+          return isDoneInfoResponse.status;
+        }
+
+        return 0;
       }
     }
   }

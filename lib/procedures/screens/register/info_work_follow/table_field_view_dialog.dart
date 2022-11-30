@@ -98,6 +98,35 @@ class _TableFieldViewDialogState extends State<TableFieldViewDialog> {
           return;
         }
       }
+
+      // check min max value, char
+      String value = widget.model.getFieldList()[i].value;
+      if (widget.model.getFieldList()[i].type == "fctext" && isNotNullOrEmpty(value)) {
+        int minChar = widget.model.getFieldList()[i].minChar;
+        int maxChar = widget.model.getFieldList()[i].maxChar;
+
+        if (isNotNullOrEmpty(maxChar) && value.length > maxChar) {
+          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được vượt quá độ dài $maxChar", ToastStyle.error);
+          return;
+        }
+        if (isNotNullOrEmpty(minChar) &&  value.length < minChar) {
+          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được nhỏ hơn độ dài $minChar", ToastStyle.error);
+          return;
+        }
+      }
+      if (widget.model.getFieldList()[i].type == "fcnumber" && isNotNullOrEmpty(value)) {
+        int minVal = widget.model.getFieldList()[i].minVal;
+        int maxVal = widget.model.getFieldList()[i].maxVal;
+
+        if (isNotNullOrEmpty(minVal) && int.parse(value) < minVal) {
+          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được nhỏ hơn $minVal", ToastStyle.error);
+          return;
+        }
+        if (isNotNullOrEmpty(maxVal) && int.parse(value) > maxVal) {
+          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được lớn hơn $minVal", ToastStyle.error);
+          return;
+        }
+      }
     }
     Navigator.pop(context, widget.model);
   }

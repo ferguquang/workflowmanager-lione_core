@@ -19,6 +19,7 @@ import 'package:workflow_manager/procedures/models/response/response_procedure_d
 import 'package:workflow_manager/procedures/models/response/single_field.dart';
 import 'package:workflow_manager/procedures/models/response/user.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_screen.dart';
+import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/eventAutoSave.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/event_show_action.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/single_field_widget/single_field_widget.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/table_field_widget/group_table_field_widget.dart';
@@ -56,9 +57,12 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
     //   donePress();
     // }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    eventBus.on<EventDoneAutoSave>().listen((event) async {
       if (model.isAutoSave) {
-        donePress();
+        int status = await donePress();
+        if (status == 1) {
+          eventBus.fire(EventShowAction());
+        }
       }
     });
   }
@@ -203,7 +207,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
     );
   }
 
-  donePress() async {
+  Future<int> donePress() async {
     FocusScope.of(context).unfocus();
     if (model.singleFields.length > 0)
       await _singleFieldKey.currentState.setValueForAllField();
@@ -220,7 +224,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
       listTableItem = _groupTableFieldWidget?.listTableItem;
       bool isCheckValidate =
           addParamsFromTableField(params, listTableItem, tableFields);
-      if (isCheckValidate == false) return;
+      if (isCheckValidate == false) return 0;
       List<String> listValueColumn = [];
       for (int row = 0; row < listTableItem.length; row++) {
         String value = listTableItem[row].getFieldList()[0].groupValues[0];
@@ -274,7 +278,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
         if(isCheckValidate2==false)
           break;
       }
-      if (isCheckValidate2 == false) return;
+      if (isCheckValidate2 == false) return 0;
       params["IDTable"] = '[${listIDTable.join(",")}]';
     }
     List<Field> singleFields = model?.singleFields;
@@ -285,7 +289,7 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
       if (!singleFields[i].isHidden == true) {
         if (singleFields[i].isRequired == true && isNullOrEmpty(value)) {
           showErrorToast("Trường " + singleFields[i].name + " cần bắt buộc!!!");
-          return;
+          return 0;
         }
       }
 
@@ -299,12 +303,14 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
     DataRecordSaveDataResponse dataRecordSaveDataResponse =
         DataRecordSaveDataResponse.fromJson(response);
     if (dataRecordSaveDataResponse.status == 1) {
-      eventBus.fire(EventShowAction());
+      // eventBus.fire(EventShowAction());
       // DataRecordSaveData dataRecordSaveData = dataRecordSaveDataResponse.data;
       showSuccessToast("Lưu thông tin thành công.");
+      return 1;
     } else {
       showErrorToast(dataRecordSaveDataResponse,
           defaultMessage: "Lưu thông tin thất bại");
+      return 1;
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:workflow_manager/procedures/models/response/register_create_resp
 import 'package:workflow_manager/procedures/models/response/response_procedure_detail.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/action_repository.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/event_reload_detail_procedure.dart';
+import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/event_show_action.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/assign_widget/assign_repository.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/assign_widget/assign_widget.dart';
 
@@ -16,11 +17,13 @@ class ActionBottomSheet extends StatefulWidget {
   int idServiceRecord;
   bool isReject;
   bool isFinish = true;
+  bool isAutoSave;
 
   ActionBottomSheet(
       {this.conditions,
       this.idServiceRecord,
       this.isReject = false,
+      this.isAutoSave,
       this.isFinish = true});
 
   @override
@@ -43,13 +46,16 @@ class _ActionBottomSheetState extends State<ActionBottomSheet> {
   void initState() {
     super.initState();
     conditions = widget.conditions;
-
-    getData();
+    _repository.isAutoSave = widget.isAutoSave;
+    eventBus.on<EventShowAction>().listen((event) async {
+      getData(true);
+    });
+    getData(false);
   }
 
-  Future<void> getData() async {
+  Future<void> getData(bool isOnEventBus) async {
     int status = await _repository.getIsResolve(
-        conditions, widget.idServiceRecord, widget.isReject);
+        conditions, widget.idServiceRecord, widget.isReject, isOnEventBus: isOnEventBus);
 
     if (status != 1) {
       Navigator.pop(context);
@@ -208,8 +214,13 @@ class _ActionBottomSheetState extends State<ActionBottomSheet> {
                             stepAssignParallels,
                             context);
                         if (status == 1) {
+                          if (conditions.schemaConditionType == 1) {
+                            widget.isFinish = false;
+                          }
                           eventBus.fire(EventReloadDetailProcedure(
-                              isFinish: widget.isFinish));
+                            isFinish: widget.isFinish,
+                            schemaConditionType: conditions.schemaConditionType
+                          ));
                           Navigator.pop(context);
                         }
                       }

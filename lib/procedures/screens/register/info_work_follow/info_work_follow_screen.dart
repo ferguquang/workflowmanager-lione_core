@@ -274,6 +274,8 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       showErrorToast("Tiêu đề không được để trống");
       return;
     }
+
+
     await _singleFieldKey.currentState.setValueForAllField();
     print("___________chay sau nay");
     params["Name"] = _titleController.text;
@@ -584,6 +586,67 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
           value = convertDoubleToInt(value);
         }
         params[key] = value;
+      }
+    }
+
+    // check min max value, char
+    for (int i = 0; i < singleFields.length; i++) {
+      String value = singleFields[i].value;
+      if (singleFields[i].type == "fctext" && isNotNullOrEmpty(value)) {
+        int minChar = singleFields[i].minChar;
+        int maxChar = singleFields[i].maxChar;
+
+        if (isNotNullOrEmpty(maxChar) && value.length > maxChar) {
+          ToastMessage.show("Trường ${singleFields[i].name} không được vượt quá độ dài $maxChar", ToastStyle.error);
+          return;
+        }
+        if (isNotNullOrEmpty(minChar) &&  value.length < minChar) {
+          ToastMessage.show("Trường ${singleFields[i].name} không được nhỏ hơn độ dài $minChar", ToastStyle.error);
+          return;
+        }
+      }
+      if (singleFields[i].type == "fcnumber" && isNotNullOrEmpty(value)) {
+        int minVal = singleFields[i].minVal;
+        int maxVal = singleFields[i].maxVal;
+
+        if (isNotNullOrEmpty(minVal) && int.parse(value) < minVal) {
+          ToastMessage.show("Trường ${singleFields[i].name} không được nhỏ hơn $minVal", ToastStyle.error);
+          return;
+        }
+        if (isNotNullOrEmpty(maxVal) && int.parse(value) > maxVal) {
+          ToastMessage.show("Trường ${singleFields[i].name} không được lớn hơn $minVal", ToastStyle.error);
+          return;
+        }
+      }
+    }
+    List<Field> tableField = _infoWorkFollowRepository.registerCreateModel.tableFields;
+    for (int i = 0; i < tableField.length; i++) {
+      String value = tableField[i].value;
+      if (tableField[i].type == "fctext" && isNotNullOrEmpty(value)) {
+        int minChar = tableField[i].minChar;
+        int maxChar = tableField[i].maxChar;
+
+        if (isNotNullOrEmpty(maxChar) && value.length > maxChar) {
+          ToastMessage.show("Trường ${tableField[i].name} không được vượt quá độ dài $maxChar", ToastStyle.error);
+          return;
+        }
+        if (isNotNullOrEmpty(minChar) &&  value.length < minChar) {
+          ToastMessage.show("Trường ${tableField[i].name} không được nhỏ hơn độ dài $minChar", ToastStyle.error);
+          return;
+        }
+      }
+      if (tableField[i].type == "fcnumber" && isNotNullOrEmpty(value)) {
+        int minVal = tableField[i].minVal;
+        int maxVal = tableField[i].maxVal;
+
+        if (isNotNullOrEmpty(minVal) && int.parse(value) < minVal) {
+          ToastMessage.show("Trường ${tableField[i].name} không được nhỏ hơn $minVal", ToastStyle.error);
+          return;
+        }
+        if (isNotNullOrEmpty(maxVal) && int.parse(value) > maxVal) {
+          ToastMessage.show("Trường ${tableField[i].name} không được lớn hơn $minVal", ToastStyle.error);
+          return;
+        }
       }
     }
 

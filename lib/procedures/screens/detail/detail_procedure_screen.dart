@@ -9,6 +9,7 @@ import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_repository.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_tab_controller/detail_procedure_tab_controller.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/event_reload_detail_procedure.dart';
+import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/eventAutoSave.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/header_detail_procedure_screen.dart';
 import 'package:workflow_manager/procedures/screens/register/list/list_register_screen.dart';
 
@@ -60,7 +61,11 @@ class DetailProcedureScreenState extends State<DetailProcedureScreen> {
         Navigator.pop(context);
         return;
       }
-      Future.delayed(const Duration(milliseconds: 500), () {
+      if (event.schemaConditionType == 0) {
+        eventBus.fire(EventAutoSave());
+      }
+
+      Future.delayed(const Duration(milliseconds: 1000), () {
         isCheckReLoad = true;
         reloadDetail();
       });

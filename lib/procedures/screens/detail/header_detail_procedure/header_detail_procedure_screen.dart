@@ -468,6 +468,7 @@ class HeaderDetailProcedureScreen extends StatelessWidget {
                             dataProcedureDetail.iDServiceRecord,
                             isReject: isReject,
                             isFinish: true,
+                            isAutoSave: dataProcedureDetail.currentStep.isAutoSave,
                           );
                         });
                   },
