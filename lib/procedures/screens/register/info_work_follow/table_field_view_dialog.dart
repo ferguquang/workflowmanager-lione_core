@@ -105,12 +105,13 @@ class _TableFieldViewDialogState extends State<TableFieldViewDialog> {
         int minChar = widget.model.getFieldList()[i].minChar;
         int maxChar = widget.model.getFieldList()[i].maxChar;
 
+        String error = "Trường ${widget.model.getFieldList()[i].name} không được ngoài khoảng từ $minChar đến $maxChar ký tự";
         if (isNotNullOrEmpty(maxChar) && value.length > maxChar) {
-          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được vượt quá độ dài $maxChar", ToastStyle.error);
+          ToastMessage.show(error, ToastStyle.error);
           return;
         }
         if (isNotNullOrEmpty(minChar) &&  value.length < minChar) {
-          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được nhỏ hơn độ dài $minChar", ToastStyle.error);
+          ToastMessage.show(error, ToastStyle.error);
           return;
         }
       }
@@ -118,12 +119,13 @@ class _TableFieldViewDialogState extends State<TableFieldViewDialog> {
         int minVal = widget.model.getFieldList()[i].minVal;
         int maxVal = widget.model.getFieldList()[i].maxVal;
 
+        String error = "Trường ${widget.model.getFieldList()[i].name} phải trong khoảng từ $minVal đến $maxVal";
         if (isNotNullOrEmpty(minVal) && int.parse(value) < minVal) {
-          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được nhỏ hơn $minVal", ToastStyle.error);
+          ToastMessage.show(error, ToastStyle.error);
           return;
         }
         if (isNotNullOrEmpty(maxVal) && int.parse(value) > maxVal) {
-          ToastMessage.show("Trường ${widget.model.getFieldList()[i].name} không được lớn hơn $minVal", ToastStyle.error);
+          ToastMessage.show(error, ToastStyle.error);
           return;
         }
       }

@@ -62,6 +62,7 @@ class _InfoDetailProcedureScreenState extends State<InfoDetailProcedureScreen> {
                     widget.type,
                     widget.dataProcedureDetail.iDServiceRecord,
                     widget.dataProcedureDetail.iDServiceRecordWfStep,
+                    widget.dataProcedureDetail.title
                   );
                 case type_register_info:
                   return RegisterStepWidget(registerStep, widget.type);

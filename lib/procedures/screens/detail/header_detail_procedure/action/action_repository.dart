@@ -97,33 +97,32 @@ class ActionRepository with ChangeNotifier {
         return response.status;
       } else {
         // chỗ này đổi logic
-        if (conditions.schemaConditionType == 0 && !isOnEventBus) {
-          eventBus.fire(EventDoneAutoSave());
-        }
+        // if (conditions.schemaConditionType == 0 && !isOnEventBus) {
+        //   eventBus.fire(EventDoneAutoSave(
+        //     conditions: conditions,
+        //     isReject: isReject
+        //   ));
+        // }
 
         //data - thông tin xác nhận chuyển bước
-        if (isOnEventBus) {
-          IsDoneInfoRequest infoRequest = IsDoneInfoRequest();
-          infoRequest.id = idServiceRecord;
-          infoRequest.idStep = conditions.iDServiceRecordWfStep;
-          infoRequest.idSchemaCondition = conditions.iDSchemaCondition;
-          var response = await ApiCaller.instance.postFormData(
-              AppUrl.recordIsDoneInfo, infoRequest.getParams(),
-              isLoading: true);
-          IsDoneInfoResponse isDoneInfoResponse =
-          IsDoneInfoResponse.fromJson(response);
-          if (isDoneInfoResponse.status == 1) {
-            _dataIsDoneInfo = isDoneInfoResponse.data;
-            idStepNext = isDoneInfoResponse.data.iDServiceRecordWfStep;
-            notifyListeners();
-          } else {
-            ToastMessage.show(isDoneInfoResponse.messages, ToastStyle.error);
-          }
-
-          return isDoneInfoResponse.status;
+        IsDoneInfoRequest infoRequest = IsDoneInfoRequest();
+        infoRequest.id = idServiceRecord;
+        infoRequest.idStep = conditions.iDServiceRecordWfStep;
+        infoRequest.idSchemaCondition = conditions.iDSchemaCondition;
+        var response = await ApiCaller.instance.postFormData(
+            AppUrl.recordIsDoneInfo, infoRequest.getParams(),
+            isLoading: true);
+        IsDoneInfoResponse isDoneInfoResponse =
+        IsDoneInfoResponse.fromJson(response);
+        if (isDoneInfoResponse.status == 1) {
+          _dataIsDoneInfo = isDoneInfoResponse.data;
+          idStepNext = isDoneInfoResponse.data.iDServiceRecordWfStep;
+          notifyListeners();
+        } else {
+          ToastMessage.show(isDoneInfoResponse.messages, ToastStyle.error);
         }
 
-        return 0;
+        return isDoneInfoResponse.status;
       }
     }
   }

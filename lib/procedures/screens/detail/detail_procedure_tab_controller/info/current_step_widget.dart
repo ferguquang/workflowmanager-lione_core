@@ -19,6 +19,7 @@ import 'package:workflow_manager/procedures/models/response/response_procedure_d
 import 'package:workflow_manager/procedures/models/response/single_field.dart';
 import 'package:workflow_manager/procedures/models/response/user.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_screen.dart';
+import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/action_bottom_sheet.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/eventAutoSave.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/event_show_action.dart';
 import 'package:workflow_manager/procedures/screens/register/info_work_follow/single_field_widget/single_field_widget.dart';
@@ -32,9 +33,10 @@ class CurrentStepWidget extends StatefulWidget {
   int type;
   int iDServiceRecord;
   int idServiceRecordWfStep;
+  String title;
 
   CurrentStepWidget(
-      this.model, this.type, this.iDServiceRecord, this.idServiceRecordWfStep);
+      this.model, this.type, this.iDServiceRecord, this.idServiceRecordWfStep, this.title);
 
   @override
   _CurrentStepWidgetState createState() => _CurrentStepWidgetState();
@@ -61,7 +63,20 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
       if (model.isAutoSave) {
         int status = await donePress();
         if (status == 1) {
-          eventBus.fire(EventShowAction());
+          // eventBus.fire(EventShowAction());
+
+          showModalBottomSheet(
+              isScrollControlled: true,
+              context: context,
+              builder: (_) {
+                event.conditions.titleHoSo = widget.title;
+                return ActionBottomSheet(
+                  conditions: event.conditions,
+                  idServiceRecord: widget.iDServiceRecord,
+                  isReject: event.isReject,
+                  isFinish: false,
+                );
+              });
         }
       }
     });

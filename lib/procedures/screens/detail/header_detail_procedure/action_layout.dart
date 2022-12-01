@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/models/response/response_procedure_detail.dart';
+import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/eventAutoSave.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/event_show_action.dart';
 
 import 'action/action_bottom_sheet.dart';
@@ -111,19 +112,26 @@ class _ActionLayoutState extends State<ActionLayout> {
                     model: conditions[index],
                   ),
                   onTap: () {
-                    showModalBottomSheet(
-                        isScrollControlled: true,
-                        context: context,
-                        builder: (_) {
-                          conditions[index].titleHoSo = dataProcedureDetail.title;
-                          return ActionBottomSheet(
-                            conditions: conditions[index],
-                            idServiceRecord:
-                            dataProcedureDetail.iDServiceRecord,
-                            isReject: isReject,
-                            isFinish: true,
-                          );
-                        });
+                    if (conditions[index].schemaConditionType == 0 && dataProcedureDetail.currentStep.isAutoSave) {
+                      eventBus.fire(EventDoneAutoSave(
+                          conditions: conditions[index],
+                          isReject: isReject
+                      ));
+                    } else {
+                      showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (_) {
+                            conditions[index].titleHoSo = dataProcedureDetail.title;
+                            return ActionBottomSheet(
+                              conditions: conditions[index],
+                              idServiceRecord:
+                              dataProcedureDetail.iDServiceRecord,
+                              isReject: isReject,
+                              isFinish: true,
+                            );
+                          });
+                    }
                   },
                 );
               },

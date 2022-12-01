@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:workflow_manager/base/utils/base_sharepreference.dart';
 import 'package:workflow_manager/base/utils/common_function.dart';
 import 'package:workflow_manager/base/utils/file_utils.dart';
+import 'package:workflow_manager/main.dart';
 import 'package:workflow_manager/procedures/screens/detail/detail_procedure_screen.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/action_bottom_sheet.dart';
 import 'package:workflow_manager/procedures/screens/detail/header_detail_procedure/action/action_item.dart';
@@ -15,6 +16,7 @@ import 'package:workflow_manager/workflow/screens/details/flow_chart.dart';
 import 'package:workflow_manager/procedures/models/response/star.dart'
 as passedStar;
 import 'action_layout.dart';
+import 'eventAutoSave.dart';
 import 'require_action/require_action_bottom_sheet.dart';
 
 class HeaderDetailProcedureScreen extends StatelessWidget {

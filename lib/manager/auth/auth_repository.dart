@@ -190,6 +190,7 @@ class AuthRepository extends ChangeNotifier {
   // check lắng nghe từ applink
   Future<void> checkApplink(BuildContext context,
       {bool isNavigation = false}) async {
+    return;
     var token = await SharedPreferencesClass.getToken();
     if (isNullOrEmpty(token)) return;
     var result = await platform.invokeMethod(Constant.APP_LINK_KEY);

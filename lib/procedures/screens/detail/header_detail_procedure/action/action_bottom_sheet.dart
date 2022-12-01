@@ -24,7 +24,8 @@ class ActionBottomSheet extends StatefulWidget {
       this.idServiceRecord,
       this.isReject = false,
       this.isAutoSave,
-      this.isFinish = true});
+      this.isFinish = true,
+      });
 
   @override
   _ActionBottomSheetState createState() => _ActionBottomSheetState();
@@ -47,9 +48,6 @@ class _ActionBottomSheetState extends State<ActionBottomSheet> {
     super.initState();
     conditions = widget.conditions;
     _repository.isAutoSave = widget.isAutoSave;
-    eventBus.on<EventShowAction>().listen((event) async {
-      getData(true);
-    });
     getData(false);
   }
 
