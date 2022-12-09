@@ -162,6 +162,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: TextField(
                         focusNode: userNameFocusNode,
                         controller: nameController,
+                        onSubmitted: (value) {
+                          _eventLogin(auth);
+                        },
                         decoration: InputDecoration(
                           hintText: 'Tên tài khoản',
                           enabledBorder: new UnderlineInputBorder(
@@ -186,6 +189,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.only(top: 16),
                       child: TextField(
                         controller: passwordController,
+                        onSubmitted: (value) {
+                          _eventLogin(auth);
+                        },
                         decoration: InputDecoration(
                           hintText: 'Mật khẩu',
                           enabledBorder: new UnderlineInputBorder(

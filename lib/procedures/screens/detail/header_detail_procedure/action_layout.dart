@@ -112,7 +112,8 @@ class _ActionLayoutState extends State<ActionLayout> {
                     model: conditions[index],
                   ),
                   onTap: () {
-                    if (conditions[index].schemaConditionType == 0 && dataProcedureDetail.currentStep.isAutoSave) {
+
+                    if (conditions[index].schemaConditionType == 0 && (dataProcedureDetail.currentStep.isAutoSave ?? false)) {
                       eventBus.fire(EventDoneAutoSave(
                           conditions: conditions[index],
                           isReject: isReject

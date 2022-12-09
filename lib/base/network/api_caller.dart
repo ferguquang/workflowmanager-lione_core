@@ -177,17 +177,17 @@ class ApiCaller {
     if (isNeedAddToken)
       params["Token"] = await SharedPreferencesClass.getToken();
     // }
-    try {
-      printParams(params, path);
-    } catch (e) {
-
-    }
+    // try {
+    //   printParams(params, path);
+    // } catch (e) {
+    //   print("$e");
+    // }
     if (isLoading) {
       showLoading();
     }
     var responseJson;
     try {
-      FormData formData = new FormData.fromMap(params);
+      var formData = FormData.fromMap(params);
       Response response = await _dio.post(path, data: formData);
       responseJson = _response(response, params);
     } on DioError catch (ex) {

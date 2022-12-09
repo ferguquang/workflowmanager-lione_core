@@ -468,8 +468,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
     if (_infoWorkFollowRepository.isCheckGroupInfos == true) {
       List<Field> tableFields =
           _infoWorkFollowRepository.registerCreateModel.tableFields;
-      bool isCheckValidate =
-          addParamsFromTableField(params, listTableItem, tableFields);
+      bool isCheckValidate = addParamsFromTableField(params, listTableItem, tableFields);
       if (isCheckValidate == false) return;
       List<int> idTables = [];
       for (var row in listTableItem) {
@@ -513,7 +512,11 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
       bool isCheckValidate = true;
       for (TableFieldWidget widget in _tableFieldWidget) {
         isCheckValidate = addParamsFromTableField(
-            params, widget.listTableItem, widget.listField);
+          params,
+          widget.listTableItem,
+          widget.listField,
+          tableFieldWidget: widget
+        );
         if (isCheckValidate == false) break;
       }
       if (isCheckValidate == false) {
@@ -775,7 +778,7 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
   }
 
   bool addParamsFromTableField(Map<String, dynamic> params,
-      List<ListTableItemModel> listTableItem, List<Field> tableFields) {
+      List<ListTableItemModel> listTableItem, List<Field> tableFields, {TableFieldWidget tableFieldWidget}) {
     List<String> listNumberTypes = ["number", "fcnumber"];
     for (int column = 0; column < tableFields.length; column++) {
       List<String> listValueColumn = [];
@@ -805,8 +808,9 @@ class _InfoWorkFollowScreenState extends State<InfoWorkFollowScreen>
           tableFields[column].isHidden = isHidden;
         }
       } else {
+
         if (tableFields[column].isRequired == true) {
-          showErrorToast("Bảng dữ liệu không được để trống");
+          showErrorToast("Bảng ${tableFieldWidget.tableName} không được để trống");
           return false;
         }
       }

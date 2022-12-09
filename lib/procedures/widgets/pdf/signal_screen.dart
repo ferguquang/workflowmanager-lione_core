@@ -513,25 +513,22 @@ class SignalScreenState extends State<SignalScreen> {
               TextButton(
                 child: Text("Xác nhận"),
                 onPressed: () async {
-                  FocusScopeNode focus = FocusScope.of(context);
-                  focus.unfocus();
+                  // FocusScopeNode focus = FocusScope.of(context);
+                  // focus.unfocus();
                   if (isNullOrEmpty(_passwordController.text)) {
                     showErrorToast("Bạn chưa điền mật khẩu");
                     return;
                   }
-                  bool isValid = await _pdfRepository
-                      .checkPassword(_passwordController.text);
+                  bool isValid = await _pdfRepository.checkPassword(_passwordController.text);
                   if (isValid) {
                     if (isSavePassword) {
-                      await SharedPreferencesClass.save(
-                          SharedPreferencesClass.PASSWORD_SIGNAL,
-                          _passwordController.text);
+                      String paswordSignal = _passwordController.text;
+                      SharedPreferencesClass.save(SharedPreferencesClass.PASSWORD_SIGNAL, paswordSignal);
                     }
-                    var isSuccess =
-                        await savePdf(_passwordController.text, widget.idHoso);
-                    if (isSuccess)
-                      Navigator.pop(context,
-                          widget.signatures != null ? isSuccess : null);
+                    var isSuccess = await savePdf(_passwordController.text, widget.idHoso);
+                    if (isSuccess) {
+                      Navigator.pop(context, widget.signatures != null ? isSuccess : null);
+                    }
                   } else {
                     showErrorToast("Mật khẩu sai");
                   }
@@ -639,8 +636,7 @@ class SignalScreenState extends State<SignalScreen> {
         return false;
       }
     } else {
-      var json = await ApiCaller.instance
-          .postFormData(AppUrl.getQTTTSignatureSavePDF, params);
+      var json = await ApiCaller.instance.postFormData(AppUrl.getQTTTSignatureSavePDF, params);
       DataSignedPdfResponse response = DataSignedPdfResponse.fromJson(json);
       if (response.status == 1) {
         showSuccessToast("Ký file thành công!");

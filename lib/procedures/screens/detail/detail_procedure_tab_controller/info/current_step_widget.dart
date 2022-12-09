@@ -59,26 +59,28 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
     //   donePress();
     // }
 
-    eventBus.on<EventDoneAutoSave>().listen((event) async {
-      if (model.isAutoSave) {
-        int status = await donePress();
-        if (status == 1) {
-          // eventBus.fire(EventShowAction());
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      eventBus.on<EventDoneAutoSave>().listen((event) async {
+        if (model.isAutoSave) {
+          int status = await donePress();
+          if (status == 1) {
+            // eventBus.fire(EventShowAction());
 
-          showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (_) {
-                event.conditions.titleHoSo = widget.title;
-                return ActionBottomSheet(
-                  conditions: event.conditions,
-                  idServiceRecord: widget.iDServiceRecord,
-                  isReject: event.isReject,
-                  isFinish: false,
-                );
-              });
+            showModalBottomSheet(
+                isScrollControlled: true,
+                context: mainGlobalKey.currentContext,
+                builder: (_) {
+                  event.conditions.titleHoSo = widget.title;
+                  return ActionBottomSheet(
+                    conditions: event.conditions,
+                    idServiceRecord: widget.iDServiceRecord,
+                    isReject: event.isReject,
+                    isFinish: false,
+                  );
+                });
+          }
         }
-      }
+      });
     });
   }
 
@@ -210,7 +212,10 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
                             "Lưu thông tin",
                             style: TextStyle(color: Colors.white),
                           ),
-                          onTap: donePress,
+                          onTap: () async {
+                            int status = await donePress();
+                            print("");
+                          },
                         ),
                       ],
                     ),
@@ -223,9 +228,14 @@ class _CurrentStepWidgetState extends State<CurrentStepWidget> {
   }
 
   Future<int> donePress() async {
-    FocusScope.of(context).unfocus();
-    if (model.singleFields.length > 0)
+    if(!mounted) {
+      return 0;
+    }
+    FocusScope.of(mainGlobalKey.currentContext).unfocus();
+    if (model.singleFields.length > 0){
       await _singleFieldKey.currentState.setValueForAllField();
+    }
+
     List<String> listNumberTypes = ["number", "fcnumber"];
     // dữ liệu trong bảng //todo ko đc xóa
     Map<String, dynamic> params = Map();

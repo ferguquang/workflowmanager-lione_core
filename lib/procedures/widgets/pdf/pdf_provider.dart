@@ -30,10 +30,9 @@ class PdfRepository extends ChangeNotifier {
   Future<bool> checkPassword(String password) async {
     Map<String, String> params = Map();
     params["Password"] = password;
-    var json = await ApiCaller.instance
-        .postFormData(AppUrl.getQTTTSignatureCheckPasswordSignature, params);
-    CheckPasswordSignalResponse response =
-        CheckPasswordSignalResponse.fromJson(json);
+    String url = AppUrl.getQTTTSignatureCheckPasswordSignature;
+    var json = await ApiCaller.instance.postFormData(url, params, isLoading: false);
+    CheckPasswordSignalResponse response = CheckPasswordSignalResponse.fromJson(json);
     if (response.status == 1) {
       return response.data;
     } else {
